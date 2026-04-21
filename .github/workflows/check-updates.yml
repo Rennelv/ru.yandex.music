@@ -8,6 +8,9 @@ jobs:
   autoupdate:
     name: Check for updates
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
 
     strategy:
       matrix:

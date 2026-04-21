@@ -21,6 +21,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Import GPG key
+        id: import_gpg
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+
       - name: Build package
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
@@ -29,7 +35,7 @@ jobs:
 
       - name: Generate Flatpak Repo
         run: |
-          flatpak build-update-repo --prune --generate-static-deltas repo
+          flatpak build-update-repo --prune --generate-static-deltas --gpg-sign=${{ steps.import_gpg.outputs.keyid }} repo
 
       - name: Deploy to GitHub Pages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'

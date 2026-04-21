@@ -1,0 +1,17 @@
+[Desktop Entry]
+Name=Yandex Music
+Name[en]=Yandex Music
+Name[ru]=Яндекс Музыка
+GenericName=Music Player
+GenericName[en]=Music Player
+GenericName[ru]=Музыкальный плеер
+Comment=Personal recommendations, mixes for any occasion and the latest musical releases
+Comment[en]=Personal recommendations, mixes for any occasion and the latest musical releases
+Comment[ru]=Персональные рекомендации, миксы под любое настроение и музыкальные новинки
+Exec=run.sh %U
+Terminal=false
+Type=Application
+Icon=ru.yandex.music
+StartupWMClass=Яндекс Музыка
+MimeType=x-scheme-handler/yandexmusic;
+Categories=AudioVideo;Audio;Music;Player;

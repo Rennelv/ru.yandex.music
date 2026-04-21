@@ -1,0 +1,61 @@
+id: ru.yandex.music
+runtime: org.freedesktop.Platform
+runtime-version: '25.08'
+sdk: org.freedesktop.Sdk
+base: org.electronjs.Electron2.BaseApp
+base-version: '25.08'
+command: run.sh
+tags:
+  - proprietary
+
+finish-args:
+  - --share=ipc
+  - --socket=wayland
+  - --socket=pulseaudio
+  - --share=network
+  - --filesystem=/tmp
+  - --device=dri
+  - --talk-name=org.gnome.SettingsDaemon.MediaKeys
+  - --talk-name=org.gnome.SessionManager
+  - --talk-name=com.canonical.AppMenu.Registrar
+  - --talk-name=org.kde.StatusNotifierWatcher
+  - --talk-name=org.freedesktop.Notifications
+  - --own-name=org.mpris.MediaPlayer2.*
+
+modules:
+  - name: yandex-music
+    buildsystem: simple
+    build-commands:
+      - ar x Yandex_Music.deb
+      - tar xf data.tar.xz
+
+      - mkdir -p /app/yandexmusic
+      - cp -r "./opt/$(ls -AU ./opt | head -1)/." /app/yandexmusic/
+      - rm -f /app/yandexmusic/resources/package-type
+
+      - |
+        for size in 16 32 48 64 128 256 512; do
+          mkdir -p "/app/share/icons/hicolor/${size}x${size}/apps"
+          cp "usr/share/icons/hicolor/${size}x${size}/apps/yandexmusic.png" \
+             "/app/share/icons/hicolor/${size}x${size}/apps/ru.yandex.music.png" || true
+        done
+
+      - install -Dm644 ru.yandex.music.desktop /app/share/applications/ru.yandex.music.desktop
+      - install -Dm755 run.sh /app/bin/run.sh
+
+    sources:
+      - type: file
+        dest-filename: Yandex_Music.deb
+        url: https://music-desktop-application.s3.yandex.net/stable/Yandex_Music_amd64_5.96.3.deb
+        sha512: 1375750d7dd58c2e34c460e329787a02ccf6d9ce9c8b35acb47d7bb80cd1a623517f9aa101c2eb1082781d2f04117b49a539c7137234cb8010a29d9ed4172b7f
+        x-checker-data:
+          type: electron-updater
+          url: https://music-desktop-application.s3.yandex.net/stable/latest-linux.yml
+
+      - type: script
+        dest-filename: run.sh
+        commands:
+          - exec zypak-wrapper /app/yandexmusic/yandexmusic "$@"
+
+      - type: file
+        path: ru.yandex.music.desktop

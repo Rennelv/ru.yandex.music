@@ -1,0 +1,38 @@
+name: Build and Deploy Repository
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    name: Build Flatpak
+    runs-on: ubuntu-latest
+
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-25.08
+      options: --privileged
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build package
+        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          bundle: ru.yandex.music.flatpak
+          manifest-path: ru.yandex.music.yml
+
+      - name: Generate Flatpak Repo
+        run: |
+          flatpak build-update-repo --prune --generate-static-deltas repo
+
+      - name: Deploy to GitHub Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./repo
+          keep_files: true

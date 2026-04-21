@@ -32,6 +32,7 @@ jobs:
         with:
           bundle: ru.yandex.music.flatpak
           manifest-path: ru.yandex.music.yml
+          gpg-sign: ${{ steps.import_gpg.outputs.keyid }}
 
       - name: Generate Flatpak Repo
         run: |

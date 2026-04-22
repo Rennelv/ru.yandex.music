@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>ru.yandex.music</id>
+  <launchable type="desktop-id">ru.yandex.music.desktop</launchable>
+  <name>Yandex Music</name>
+  <name xml:lang="ru">Яндекс Музыка</name>
+  <developer id="ru.yandex">
+    <name>Yandex</name>
+    <name xml:lang="ru">Яндекс</name>
+  </developer>
+  <summary>Desktop client for Yandex Music</summary>
+  <summary xml:lang="ru">Настольное приложение Яндекс Музыки</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>LicenseRef-proprietary</project_license>
+  <description>
+    <p>Discover new music, listen to podcasts, and enjoy your favorite tracks.</p>
+    <p xml:lang="ru">Открывайте новую музыку, слушайте подкасты и наслаждайтесь любимыми треками.</p>
+  </description>
+  <content_rating type="oars-1.1"/>
+  <url type="homepage">https://music.yandex.ru/</url>
+  <provides>
+    <binary>run.sh</binary>
+  </provides>
+  <releases>
+    <release version="5.96.3" date="2026-04-16">
+      <description></description>
+    </release>
+  </releases>
+</component>

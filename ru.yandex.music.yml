@@ -41,6 +41,7 @@ modules:
         done
 
       - install -Dm644 ru.yandex.music.desktop /app/share/applications/ru.yandex.music.desktop
+      - install -Dm644 ru.yandex.music.metainfo.xml /app/share/metainfo/ru.yandex.music.metainfo.xml
       - install -Dm755 run.sh /app/bin/run.sh
 
     sources:
@@ -59,3 +60,6 @@ modules:
 
       - type: file
         path: ru.yandex.music.desktop
+
+      - type: file
+        path: ru.yandex.music.metainfo.xml

@@ -14,6 +14,9 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+    env:
+      AUTO_MERGE_TITLE_PREFIX: 'yandex-music: Update '
+      AUTO_MERGE_METHOD: 'merge'
 
     if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'pull_request'
 
@@ -24,21 +27,20 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const prs = context.payload.workflow_run.pull_requests ?? [];
-            const allowedTitlePrefix = 'yandex-music: Update ';
             const failures = [];
 
             for (const pr of prs) {
               if (
                 pr.user?.login === 'github-actions[bot]' &&
                 pr.head?.repo?.full_name === `${context.repo.owner}/${context.repo.repo}` &&
-                pr.title?.startsWith(allowedTitlePrefix)
+                pr.title?.startsWith(process.env.AUTO_MERGE_TITLE_PREFIX)
               ) {
                 try {
                   await github.rest.pulls.merge({
                     owner: context.repo.owner,
                     repo: context.repo.repo,
                     pull_number: pr.number,
-                    merge_method: 'merge',
+                    merge_method: process.env.AUTO_MERGE_METHOD,
                   });
                 } catch (error) {
                   const message = error instanceof Error ? error.message : String(error);

@@ -47,5 +47,6 @@ jobs:
             }
 
             if (failures.length > 0) {
-              throw new Error('Failed to automatically merge one or more PRs. Check the workflow logs for details.');
+              const failedPullNumbers = failures.map((failure) => failure.split(':', 1)[0]).join(', ');
+              throw new Error(`Failed to automatically merge ${failures.length} PR(s): ${failedPullNumbers}. Check the workflow logs for details.`);
             }

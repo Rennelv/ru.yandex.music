@@ -28,25 +28,27 @@ jobs:
             const failures = [];
 
             for (const pr of prs) {
-              if (pr.user?.login !== 'github-actions[bot]') continue;
-              if (pr.head?.repo?.full_name !== `${context.repo.owner}/${context.repo.repo}`) continue;
-              if (!pr.title?.startsWith(allowedTitlePrefix)) continue;
-
-              try {
-                await github.rest.pulls.merge({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  pull_number: pr.number,
-                  merge_method: 'merge',
-                });
-              } catch (error) {
-                const message = error instanceof Error ? error.message : String(error);
-                core.error(`Failed to merge PR #${pr.number} (${pr.title}): ${message}`);
-                failures.push(`PR #${pr.number}: ${message}`);
+              if (
+                pr.user?.login === 'github-actions[bot]' &&
+                pr.head?.repo?.full_name === `${context.repo.owner}/${context.repo.repo}` &&
+                pr.title?.startsWith(allowedTitlePrefix)
+              ) {
+                try {
+                  await github.rest.pulls.merge({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    pull_number: pr.number,
+                    merge_method: 'merge',
+                  });
+                } catch (error) {
+                  const message = error instanceof Error ? error.message : String(error);
+                  core.error(`Failed to merge PR #${pr.number} (${pr.title}): ${message}`);
+                  failures.push({ number: pr.number, message });
+                }
               }
             }
 
             if (failures.length > 0) {
-              const failedPullNumbers = failures.map((failure) => failure.split(':')[0]).join(', ');
+              const failedPullNumbers = failures.map((failure) => `#${failure.number}`).join(', ');
               throw new Error(`Failed to automatically merge ${failures.length} PR(s): ${failedPullNumbers}. Check the workflow logs for details.`);
             }

@@ -14,6 +14,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+    # Intended for yandex-music update PRs created by the repository's update checker.
     env:
       AUTO_MERGE_TITLE_PREFIX: "${{ vars.AUTO_MERGE_TITLE_PREFIX || 'yandex-music: Update ' }}"
       AUTO_MERGE_METHOD: "${{ vars.AUTO_MERGE_METHOD || 'merge' }}"
@@ -63,6 +64,6 @@ jobs:
             }
 
             if (failures.length > 0) {
-              const failedPullNumbers = failures.map((failure) => `#${failure.number}`).join(', ');
-              throw new Error(`Failed to automatically merge ${failures.length} PR(s): ${failedPullNumbers}. Check the workflow logs for details.`);
+              const failureSummary = failures.map((failure) => `#${failure.number} (${failure.message})`).join(', ');
+              throw new Error(`Failed to automatically merge ${failures.length} PR(s): ${failureSummary}. Check the workflow logs for details.`);
             }

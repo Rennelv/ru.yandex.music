@@ -1,4 +1,4 @@
-name: Auto merge updates
+name: Auto-merge updates
 
 on:
   workflow_run:
